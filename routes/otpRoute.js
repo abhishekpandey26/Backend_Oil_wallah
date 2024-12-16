@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Send OTP Route
+// Send OTP route
 router.post('/send-otp', async (req, res) => {
   const { email } = req.body;
 
@@ -28,7 +28,7 @@ router.post('/send-otp', async (req, res) => {
       user = await User.create({ email }); // Create a new user if not found
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000); // Generations 6-digit OTP
 
     // Save OTP to the database
     await OTP.create({ email, otp });
@@ -37,8 +37,19 @@ router.post('/send-otp', async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: 'Your OTP for Verification',
-      text: `Your OTP is: ${otp}`,
+      subject: 'Your OTP for Registration',
+      text: `
+Hi User,
+
+Please use this OTP for registration.
+
+Your OTP is: ${otp}
+
+Your OTP will expire in 30 minutes.
+
+Thanks,
+Your Team
+      `,
     };
 
     await transporter.sendMail(mailOptions);

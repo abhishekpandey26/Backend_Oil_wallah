@@ -11,7 +11,7 @@ const razorpayInstance = new Razorpay({
     key_secret: process.env.RAZORPAY_SECRET,
 });
 
-// ROUTE 1 : Create Order Api Using POST Method http://localhost:4000/api/payment/order
+// ROUTE 1 :  Method http://localhost:4000/api/payment/order
 router.post('/order', (req, res) => {
     const { amount } = req.body;
 
@@ -36,7 +36,7 @@ router.post('/order', (req, res) => {
     }
 })
 
-// ROUTE 2 : Create Verify Api Using POST Method http://localhost:4000/api/payment/verify
+// ROUTE 2 :  http://localhost:4000/api/payment/verify
 router.post('/verify', async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
