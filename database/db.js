@@ -7,11 +7,15 @@ dotenv.config();
 const connectToMongo = async () => {
     try {
         await connect(process.env.MONGODB_URI, {
-            dbName: "Oil_wallah", // This is the name of your database
+            dbName: "Oil_wallah",
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
         });
         console.log("---***Database Connected Successfully***---");
     } catch (error) {
-        console.log("Error connecting to MongoDB:", error);
+        console.error("Error connecting to MongoDB:", error);
+        // Add retry logic
+        setTimeout(() => connectToMongo(), 5000);
     }
 }
 

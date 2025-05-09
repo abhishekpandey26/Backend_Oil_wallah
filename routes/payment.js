@@ -37,10 +37,9 @@ router.post('/order', (req, res) => {
 })
 
 // ROUTE 2 :  http://localhost:4000/api/payment/verify
+// ROUTE 2 :  http://localhost:4000/api/payment/verify
 router.post('/verify', async (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-
-    // console.log("req.body", req.body);
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, mobileNumber } = req.body;
 
     try {
         // Create Sign
@@ -51,8 +50,6 @@ router.post('/verify', async (req, res) => {
             .update(sign.toString())
             .digest("hex");
 
-        // console.log(razorpay_signature === expectedSign);
-
         // Create isAuthentic
         const isAuthentic = expectedSign === razorpay_signature;
 
@@ -61,7 +58,8 @@ router.post('/verify', async (req, res) => {
             const payment = new Payment({
                 razorpay_order_id,
                 razorpay_payment_id,
-                razorpay_signature
+                razorpay_signature,
+                mobileNumber  // Include this
             });
 
             // Save Payment 
@@ -69,13 +67,15 @@ router.post('/verify', async (req, res) => {
 
             // Send Message 
             res.json({
-                message: "Payement Successfully"
+                message: "Payment Successful"
             });
+        } else {
+            res.status(400).json({ message: "Payment verification failed" });
         }
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error!" });
         console.log(error);
     }
-})
+});
 
 export default router

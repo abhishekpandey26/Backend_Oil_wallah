@@ -14,6 +14,10 @@ const PaymentSchema = new Schema({
         type: String,
         required: true,
     },
+    mobileNumber: {  // Add this field
+        type: String,
+        required: true,
+    },
     date: {
         type: Date,
         default: Date.now
