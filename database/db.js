@@ -1,13 +1,17 @@
 import { connect } from "mongoose";
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 const connectToMongo = async () => {
     try {
-        await connect('mongodb://localhost:27017', {
-            dbName: "Oil_wallah",
+        await connect(process.env.MONGODB_URI, {
+            dbName: "Oil_wallah", // This is the name of your database
         });
-        console.log("---***Database Connected Successfully***---")
+        console.log("---***Database Connected Successfully***---");
     } catch (error) {
-        console.log(error);
+        console.log("Error connecting to MongoDB:", error);
     }
 }
 
