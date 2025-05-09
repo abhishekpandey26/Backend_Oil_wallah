@@ -2,36 +2,43 @@ import express from 'express';
 import cors from 'cors';
 import connectToMongo from './database/db.js'; 
 import payment from './routes/payment.js'; 
-import Address from './routes/AddressRoute.js'; // Import Address routes
-import admin from './routes/admin.js'; // Import admin routes
-import otpRoutes from './routes/otpRoute.js'; // Import OTP routes
-import Payment from './models/Payment.js'; // Import the Payment model (make sure this path is correct)
+import Address from './routes/AddressRoute.js';
+import admin from './routes/admin.js';
+import otpRoutes from './routes/otpRoute.js';
+import Payment from './models/Payment.js';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 // Initialize Express app
 const app = express();
 
-// Set the port
-const port = 5000;
+// Set port from env or fallback to 5000
+const port = process.env.PORT || 5000;
 
-// Middleware setup
-app.use(express.json()); // Parse incoming JSON data
-app.use(cors()); // Enable Cross-Origin Resource Sharing
+// Middleware
+app.use(express.json());
+app.use(cors({
+  origin: 'https://oil-walla-frontend.vercel.app', // ✅ Add frontend domain
+  credentials: true
+}));
 
-// Connect to the database
+// Connect to MongoDB
 connectToMongo();
 
-// Home route
+// Health check route
 app.get('/', (req, res) => {
-  res.send('Razorpay Payment Gateway Using React And Node Js');
+  res.send('OilWallah backend is running...');
 });
 
-// Routes
-app.use('/api/payment', payment); // Payment route
-app.use('/api/address', Address); // Address route
-app.use('/api/admin', admin); // Admin route
-app.use('/api/otp', otpRoutes); // OTP route
+// API routes
+app.use('/api/payment', payment);
+app.use('/api/address', Address);
+app.use('/api/admin', admin);
+app.use('/api/otp', otpRoutes);
 
 // Start server
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at port ${port}`);
 });

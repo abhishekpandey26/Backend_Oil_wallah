@@ -1,5 +1,7 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Address from '../models/Address.js';
+
 const router = express.Router();
 
 // Save Address
@@ -13,6 +15,7 @@ router.post("/save", async (req, res) => {
   try {
     const address = new Address({ name, mobileNumber, pinCode, houseAddress, locality, city, state });
     await address.save();
+    console.log("Address saved:", address);
     res.status(201).json({ message: "Address saved successfully", address });
   } catch (error) {
     console.error("Error saving address:", error);
@@ -23,6 +26,11 @@ router.post("/save", async (req, res) => {
 // Fetch Address by ID
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "Invalid address ID" });
+  }
+
   try {
     const address = await Address.findById(id);
     if (!address) {
@@ -35,4 +43,4 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-export default router; 
+export default router;
