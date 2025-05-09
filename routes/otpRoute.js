@@ -1,6 +1,6 @@
 import express from 'express';
 import OTP from '../models/OTPModel.js';
-import User from '../models/User.js';
+import User from '../models/UserModel.js';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
